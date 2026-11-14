@@ -1,0 +1,16 @@
+.block-container {
+    max-width: 1400px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+h1, h2, h3 {
+    color: #183b2b;
+}
+
+[data-testid="stMetric"] {
+    background: #f4f8f4;
+    border: 1px solid #dce9dd;
+    border-radius: 12px;
+    padding: 16px;
+}
