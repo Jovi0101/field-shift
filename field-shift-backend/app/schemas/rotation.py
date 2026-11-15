@@ -22,12 +22,12 @@ class RotationAnalyzeRequest(BaseModel):
 
 
 class Recommendation(BaseModel):
-    strategy: str = Field(examples=["Cobertura de inverno"])
+    strategy: str = Field(examples=["Winter cover"])
     score: int = Field(ge=0, le=100)
     crops: list[str]
     criteria: dict[str, int] = Field(
         default_factory=dict,
-        description="Pontuação de 0 a 100 para cada prioridade considerada.",
+        description="Score from 0 to 100 for each priority considered.",
     )
     benefits: list[str] = Field(default_factory=list)
     risks: list[str] = Field(default_factory=list)
