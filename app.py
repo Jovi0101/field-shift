@@ -124,7 +124,7 @@ def render_new_farm_form() -> None:
 
     left, right = st.columns(2)
     with left:
-        name = st.text_input("Farm name", value="Demo Farm")
+        name = st.text_input("Farm name", placeholder="Double K Ranch")
         latitude = st.number_input("Latitude", min_value=-90.0, max_value=90.0, format="%.6f", key="new_lat")
         soil = st.selectbox("Soil type", list(SOIL_LABELS), format_func=SOIL_LABELS.get)
         irrigation = st.checkbox("Irrigation available")
