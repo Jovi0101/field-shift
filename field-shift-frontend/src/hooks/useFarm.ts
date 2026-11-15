@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { farmService } from "../services/farmService";
+import { api } from "../services/api";
 import type { Farm, FarmCreate } from "../types/api";
 
 const INITIAL_FORM: FarmCreate = {
@@ -45,7 +45,7 @@ export function useFarm(onCreated: (farm: Farm) => void) {
         .map((crop) => crop.trim().toLowerCase())
         .filter(Boolean)
         .map((crop) => CROP_ALIASES[crop] ?? crop);
-      onCreated(await farmService.create({ ...form, previous_crops }));
+      onCreated(await api.createFarm({ ...form, previous_crops }));
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : String(reason));
     } finally {
