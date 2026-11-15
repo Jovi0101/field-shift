@@ -4,6 +4,8 @@ Valores ilustrativos para o MVP; revisar com fontes agronômicas antes da demo.
 """
 from dataclasses import dataclass
 
+from app.schemas.crop import CropRead
+
 
 @dataclass(frozen=True)
 class Crop:
@@ -27,3 +29,19 @@ CROPS: dict[str, Crop] = {
         Crop("bean", "Feijão", "Fabaceae", "summer", True, "medium", 18, 28),
     ]
 }
+
+
+def list_crops() -> list[CropRead]:
+    """Expõe o catálogo em um contrato estável, sem vazar a implementação interna."""
+    return [
+        CropRead(
+            id=crop.id,
+            name=crop.name_pt,
+            family=crop.family,
+            season=crop.season,
+            nitrogen_fixing=crop.nitrogen_fixing,
+            water_demand=crop.water_demand,
+            temperature_range_c=(crop.temp_min_c, crop.temp_max_c),
+        )
+        for crop in CROPS.values()
+    ]

@@ -49,12 +49,24 @@ export interface Recommendation {
   strategy: string;
   score: number;
   crops: string[];
+  criteria: Record<string, number>;
   benefits: string[];
   risks: string[];
+  rationale: string[];
 }
 
 export interface RotationAnalyzeResponse {
   farm_id: string;
   recommendations: Recommendation[];
   is_mock: boolean;
+}
+
+export interface Crop {
+  id: string;
+  name: string;
+  family: string;
+  season: string;
+  nitrogen_fixing: boolean;
+  water_demand: string;
+  temperature_range_c: [number, number];
 }

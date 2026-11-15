@@ -1,8 +1,12 @@
-// Dono: Integrante 04 — dashboard de resultados.
-// TODO: gráficos de climate.monthly (ex.: npm i recharts), comparador e ranking visual.
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
-import type { ClimateResponse, Farm, RotationAnalyzeResponse } from "../types/api";
+import { ClimateHistoryChart } from "../components/dashboard/ClimateHistoryChart";
+import { ClimateSummary } from "../components/dashboard/ClimateSummary";
+import { PrioritySelector } from "../components/dashboard/PrioritySelector";
+import { RecommendationCard } from "../components/dashboard/RecommendationCard";
+import { RotationComparison } from "../components/dashboard/RotationComparison";
+import { SoilIndicators } from "../components/dashboard/SoilIndicators";
+import type { ClimateResponse, Farm, Priorities, RotationAnalyzeResponse } from "../types/api";
 
 const DEFAULT_PRIORITIES = {
   soil_health: 30,
@@ -14,45 +18,74 @@ const DEFAULT_PRIORITIES = {
 export default function DashboardPage({ farm, onBack }: { farm: Farm; onBack: () => void }) {
   const [climate, setClimate] = useState<ClimateResponse | null>(null);
   const [rotation, setRotation] = useState<RotationAnalyzeResponse | null>(null);
+  const [priorities, setPriorities] = useState<Priorities>(DEFAULT_PRIORITIES);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const prioritiesAreValid = Object.values(priorities).reduce((sum, value) => sum + value, 0) === 100;
+
+  async function updateRotation(nextPriorities: Priorities) {
+    if (!prioritiesAreValid) return;
+    setLoading(true);
+    setError(null);
+    try {
+      setRotation(await api.analyzeRotation({ farm_id: farm.id, priorities: nextPriorities }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    Promise.all([
+    let active = true;
+    setLoading(true);
+    Promise.allSettled([
       api.getClimate(farm.latitude, farm.longitude),
       api.analyzeRotation({ farm_id: farm.id, priorities: DEFAULT_PRIORITIES }),
     ])
-      .then(([c, r]) => {
-        setClimate(c);
-        setRotation(r);
+      .then(([climateResult, rotationResult]) => {
+        if (!active) return;
+        if (climateResult.status === "fulfilled") setClimate(climateResult.value);
+        if (rotationResult.status === "fulfilled") setRotation(rotationResult.value);
+        const failed = [climateResult, rotationResult].filter((result) => result.status === "rejected");
+        if (failed.length) setError("Não foi possível carregar todos os dados. Você ainda pode explorar o resultado disponível.");
       })
-      .catch((err) => setError(err instanceof Error ? err.message : String(err)));
+      .finally(() => active && setLoading(false));
+    return () => { active = false; };
   }, [farm]);
 
   return (
-    <div>
-      <button onClick={onBack}>← Voltar</button>
-      <h2>{farm.name}</h2>
+    <div className="dashboard">
+      <header className="dashboard-header">
+        <button className="back-button" onClick={onBack}>← Nova propriedade</button>
+        <div>
+          <p className="eyebrow">Diagnóstico da safra</p>
+          <h2>{farm.name}</h2>
+          <p className="muted">Compare cenários de rotação e encontre um ponto de partida para a conversa técnica.</p>
+        </div>
+      </header>
       {error && <p className="error">{error}</p>}
 
-      {climate && (
-        <section className="card">
-          <h3>Clima ({climate.period}) {climate.is_mock && <small>(mock)</small>}</h3>
-          <p>Temperatura média: {climate.temperature_avg_c} °C</p>
-          <p>Precipitação média: {climate.precipitation_avg_mm_day} mm/dia</p>
-          <small>Fonte: {climate.source}</small>
-        </section>
-      )}
+      <div className="dashboard-overview">
+        {climate && <ClimateSummary climate={climate} />}
+        <SoilIndicators farm={farm} />
+      </div>
+      {climate && <ClimateHistoryChart climate={climate} />}
+      <PrioritySelector value={priorities} onChange={setPriorities} />
+      <button className="primary-action" onClick={() => updateRotation(priorities)} disabled={!prioritiesAreValid || loading}>
+        {loading ? "Atualizando análise..." : "Atualizar recomendações"}
+      </button>
 
-      {rotation?.recommendations.map((rec) => (
-        <section className="card" key={rec.strategy}>
-          <h3>{rec.strategy} — {rec.score}/100</h3>
-          <p>{rec.crops.join(" → ")}</p>
-          <strong>Benefícios</strong>
-          <ul>{rec.benefits.map((b) => <li key={b}>{b}</li>)}</ul>
-          <strong>Riscos</strong>
-          <ul>{rec.risks.map((r) => <li key={r}>{r}</li>)}</ul>
-        </section>
-      ))}
+      {rotation && <RotationComparison recommendations={rotation.recommendations} />}
+      <section className="recommendations-section">
+        <div className="section-heading"><div><p className="eyebrow">Resultado</p><h3>Estratégias recomendadas</h3></div></div>
+        <div className="recommendations-grid">
+          {rotation?.recommendations.map((recommendation, index) => (
+            <RecommendationCard key={recommendation.strategy} recommendation={recommendation} rank={index + 1} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

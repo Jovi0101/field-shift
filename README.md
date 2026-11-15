@@ -1,31 +1,55 @@
 # Field Shift
 
-Recomendações de rotação de culturas usando dados ambientais da NASA.
+MVP de recomendação de rotação de culturas para a demonstração de hackathon.
+O produtor cadastra um perfil simples da propriedade, visualiza o contexto
+climático da NASA e compara cenários de rotação que respondem às prioridades
+da safra.
 
-- **Backend:** Python + FastAPI (`field-shift-backend/`)
-- **Frontend:** React + TypeScript + Vite (`field-shift-frontend/`)
-- **Banco:** PostgreSQL via Docker (opcional até o marco de 60% — as fazendas ficam em memória por enquanto)
+O estado detalhado do escopo está em [docs/MVP_STATUS.md](docs/MVP_STATUS.md).
 
-## Pré-requisitos
+## Fluxo demonstrável
 
-Python 3.12+, Node 20 LTS, Git. Docker Desktop só quando o Postgres entrar.
+1. Cadastrar a propriedade, coordenadas, solo, irrigação e histórico recente.
+2. Consultar dados climáticos da NASA POWER (ou o modo demonstrativo).
+3. Escolher o peso de solo, água, clima e diversificação.
+4. Comparar três estratégias, com pontuações, benefícios, riscos e justificativas.
 
-## Rodando
+O resultado é um apoio inicial à conversa técnica — não é uma recomendação
+agronômica prescrita.
 
-**Backend** (http://localhost:8000, documentação em http://localhost:8000/docs):
+## Estrutura atual
+
+- `field-shift-backend/`: FastAPI, contratos Pydantic, regras do MVP e cliente NASA POWER.
+- `field-shift-frontend/`: React + TypeScript + Vite, formulário e dashboard.
+- `docs/`: escopo, estado das entregas e roteiro de apresentação.
+
+No backend, os routers HTTP exercem o papel de handler e chamam serviços e
+repositórios. O repositório de fazendas fica em memória de propósito neste
+recorte; trocar para PostgreSQL depois não altera os contratos públicos.
+
+## Rodar localmente
+
+Pré-requisitos: Node 20 LTS e Python 3.12+.
+
+### Backend
 
 ```bash
 cd field-shift-backend
 python -m venv .venv
-.venv\Scripts\activate          # Linux/macOS: source .venv/bin/activate
+.venv\Scripts\activate
 pip install -r requirements.txt
-copy .env.example .env          # Linux/macOS: cp .env.example .env
+copy .env.example .env
 uvicorn main:app --reload
 ```
 
-Testes de contrato: `pytest` (dentro de `field-shift-backend/`).
+A API fica em `http://localhost:8000` e a documentação interativa em
+`http://localhost:8000/docs`.
 
-**Frontend** (http://localhost:5173; `/api` é repassado para o backend pelo proxy do Vite):
+Para uma demo que não dependa de internet, acrescente `USE_MOCK_CLIMATE=true`
+ao arquivo `field-shift-backend/.env`. O retorno exibirá que os dados são
+demonstrativos.
+
+### Frontend
 
 ```bash
 cd field-shift-frontend
@@ -33,34 +57,28 @@ npm install
 npm run dev
 ```
 
-**Banco** (quando for usar): `docker compose up -d db`
+O frontend abre em `http://localhost:5173`; o Vite encaminha `/api` ao backend.
+
+### Testes
+
+```bash
+cd field-shift-backend
+pytest
+
+cd ../field-shift-frontend
+npm run build
+```
 
 ## Contratos de API
 
-A fonte da verdade são os schemas Pydantic em `field-shift-backend/app/schemas/`, espelhados em
-`field-shift-frontend/src/types/api.ts`. Mudou um, muda o outro **no mesmo PR**.
+Os schemas Pydantic em `field-shift-backend/app/schemas/` são a fonte da
+verdade; os tipos em `field-shift-frontend/src/types/api.ts` os espelham.
+Qualquer mudança de contrato deve atualizar os dois no mesmo pull request.
 
-| Rota | Dono | Estado |
+| Método | Rota | Estado no MVP |
 | --- | --- | --- |
-| `POST /api/v1/farms` → retorna a fazenda com `id` | 05 | em memória |
-| `GET /api/v1/farms/{id}` | 05 | em memória |
-| `GET /api/v1/environment/climate?latitude=&longitude=` | 01 | **NASA POWER real** (mensal 2020–2024; `USE_MOCK_CLIMATE=true` para offline) |
-| `POST /api/v1/rotation/analyze` | 02 | mock fixo |
-
-Unidades: temperatura em °C, precipitação em **mm/dia** (como a NASA POWER entrega).
-Respostas mockadas trazem `"is_mock": true`.
-
-## Quem mexe onde
-
-| Integrante | Arquivos principais |
-| --- | --- |
-| 01 NASA Data | `app/integrations/nasa/`, `app/services/climate_service.py` |
-| 02 Agronomic Engine | `app/services/crop_catalog.py`, `app/services/rotation_service.py` |
-| 03 Farm Profile | `src/pages/FarmProfilePage.tsx`, componentes de mapa |
-| 04 Dashboard | `src/pages/DashboardPage.tsx`, componentes de gráficos |
-| 05 Integration | `schemas/`, `types/api.ts`, `tests/`, `docker-compose.yml`, repositório |
-
-## Fluxo de Git
-
-`main` sempre roda. Cada um trabalha no próprio branch (`feat/nasa-client`, `feat/dashboard`...)
-e abre PR pequeno. Antes do PR: `pytest` no backend e `npm run build` no frontend.
+| `POST` | `/api/v1/farms` | cadastro em memória |
+| `GET` | `/api/v1/farms` e `/api/v1/farms/{farm_id}` | consulta em memória |
+| `GET` | `/api/v1/environment/climate` | NASA POWER real, com modo demonstrativo offline |
+| `GET` | `/api/v1/crops` | catálogo de cinco culturas do MVP |
+| `POST` | `/api/v1/rotation/analyze` | motor de regras transparente e parametrizado |

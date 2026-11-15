@@ -1,5 +1,6 @@
 import type {
   ClimateResponse,
+  Crop,
   Farm,
   FarmCreate,
   RotationAnalyzeRequest,
@@ -30,6 +31,8 @@ export const api = {
     request<ClimateResponse>(
       `/environment/climate?latitude=${latitude}&longitude=${longitude}`,
     ),
+
+  getCrops: () => request<Crop[]>("/crops"),
 
   analyzeRotation: (data: RotationAnalyzeRequest) =>
     request<RotationAnalyzeResponse>("/rotation/analyze", {

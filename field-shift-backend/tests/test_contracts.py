@@ -85,7 +85,28 @@ def test_rotation_contract():
     )
     assert res.status_code == 200
     rec = res.json()["recommendations"][0]
-    assert {"strategy", "score", "crops", "benefits", "risks"} <= rec.keys()
+    assert {"strategy", "score", "crops", "criteria", "benefits", "risks", "rationale"} <= rec.keys()
+    assert res.json()["is_mock"] is False
+
+
+def test_catalog_contract():
+    res = client.get("/api/v1/crops")
+    assert res.status_code == 200
+    assert {"id", "name", "family", "season", "nitrogen_fixing", "water_demand"} <= res.json()[0].keys()
+
+
+def test_priority_changes_ranking():
+    farm_id = client.post("/api/v1/farms", json=FARM).json()["id"]
+    soil_first = client.post(
+        "/api/v1/rotation/analyze",
+        json={"farm_id": farm_id, "priorities": {"soil_health": 70, "water_efficiency": 10, "climate_resilience": 10, "diversification": 10}},
+    ).json()
+    diversity_first = client.post(
+        "/api/v1/rotation/analyze",
+        json={"farm_id": farm_id, "priorities": {"soil_health": 10, "water_efficiency": 10, "climate_resilience": 10, "diversification": 70}},
+    ).json()
+    assert soil_first["recommendations"][0]["strategy"] == "Cobertura de inverno"
+    assert diversity_first["recommendations"][0]["strategy"] == "Diversificação com feijão"
 
 
 def test_priorities_must_sum_100():
