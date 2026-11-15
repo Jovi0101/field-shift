@@ -1,18 +1,18 @@
 import type { Recommendation } from "../../types/api";
 
 const CROP_NAMES: Record<string, string> = {
-  soybean: "Soja",
-  corn: "Milho",
-  oats: "Aveia",
-  wheat: "Trigo",
-  bean: "Feijão",
+  soybean: "Soybean",
+  corn: "Corn",
+  oats: "Oats",
+  wheat: "Wheat",
+  bean: "Bean",
 };
 
 const CRITERIA_NAMES: Record<string, string> = {
-  soil_health: "Solo",
-  water_efficiency: "Água",
-  climate_resilience: "Clima",
-  diversification: "Diversidade",
+  soil_health: "Soil",
+  water_efficiency: "Water",
+  climate_resilience: "Climate",
+  diversification: "Diversity",
 };
 
 export function RecommendationCard({ recommendation, rank }: { recommendation: Recommendation; rank: number }) {
@@ -20,7 +20,7 @@ export function RecommendationCard({ recommendation, rank }: { recommendation: R
     <article className={`recommendation-card ${rank === 1 ? "recommendation-top" : ""}`}>
       <div className="recommendation-head">
         <div>
-          <span className="rank-label">{rank === 1 ? "Mais aderente" : `${rank}ª alternativa`}</span>
+          <span className="rank-label">{rank === 1 ? "Best fit" : `Option ${rank}`}</span>
           <h3>{recommendation.strategy}</h3>
         </div>
         <div className="score-badge"><strong>{recommendation.score}</strong><span>/100</span></div>
@@ -32,11 +32,11 @@ export function RecommendationCard({ recommendation, rank }: { recommendation: R
         ))}
       </div>
       <div className="recommendation-details">
-        <div><strong>Benefícios</strong><ul>{recommendation.benefits.map((item) => <li key={item}>{item}</li>)}</ul></div>
-        <div><strong>Pontos de atenção</strong><ul>{recommendation.risks.map((item) => <li key={item}>{item}</li>)}</ul></div>
+        <div><strong>Benefits</strong><ul>{recommendation.benefits.map((item) => <li key={item}>{item}</li>)}</ul></div>
+        <div><strong>Watch points</strong><ul>{recommendation.risks.map((item) => <li key={item}>{item}</li>)}</ul></div>
       </div>
       <details>
-        <summary>Por que esta alternativa?</summary>
+        <summary>Why this option?</summary>
         <ul>{recommendation.rationale.map((item) => <li key={item}>{item}</li>)}</ul>
       </details>
     </article>
