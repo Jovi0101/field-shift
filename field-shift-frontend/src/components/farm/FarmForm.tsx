@@ -40,11 +40,11 @@ export function FarmForm({
         <div className="form-grid">
           <label>
             Farm name
-            <input value={form.name} onChange={(event) => onFieldChange("name", event.target.value)} required />
+            <input value={form.name} onChange={(event) => onFieldChange("name", event.target.value)} placeholder="e.g. Double K Ranch" required />
           </label>
           <label>
             Area (ha)
-            <input type="number" min="0.1" step="any" value={form.area_hectares} onChange={(event) => onFieldChange("area_hectares", Number(event.target.value))} required />
+            <input type="number" min="0.1" step="any" value={form.area_hectares || ""} onChange={(event) => onFieldChange("area_hectares", Number(event.target.value))} placeholder="e.g. 200" required />          
           </label>
         </div>
       </fieldset>
