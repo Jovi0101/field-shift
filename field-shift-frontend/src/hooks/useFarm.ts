@@ -16,13 +16,13 @@ export type LocationStatus =
   | { state: "error"; message: string };
 
 const INITIAL_FORM: FarmDraft = {
-  name: "Demo Farm",
+  name: "",
   latitude: null,
   longitude: null,
-  area_hectares: 120,
+  area_hectares: 0,
   soil_type: "clay",
   irrigation: false,
-  previous_crops: ["soybean", "corn"],
+  previous_crops: [],
 };
 
 const CROP_ALIASES: Record<string, string> = {
