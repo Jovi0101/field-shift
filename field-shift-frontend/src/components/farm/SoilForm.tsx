@@ -10,20 +10,20 @@ interface Props {
 export function SoilForm({ soilType, irrigation, onSoilTypeChange, onIrrigationChange }: Props) {
   return (
     <fieldset className="form-section">
-      <legend>Solo e água</legend>
+      <legend>Soil and water</legend>
       <div className="form-grid">
         <label>
-          Tipo de solo
+          Soil type
           <select value={soilType} onChange={(event) => onSoilTypeChange(event.target.value as SoilType)}>
-            <option value="clay">Argiloso</option>
-            <option value="sandy">Arenoso</option>
-            <option value="loam">Franco</option>
-            <option value="silt">Siltoso</option>
+            <option value="clay">Clay</option>
+            <option value="sandy">Sandy</option>
+            <option value="loam">Loam</option>
+            <option value="silt">Silt</option>
           </select>
         </label>
         <label className="checkbox-label">
           <input type="checkbox" checked={irrigation} onChange={(event) => onIrrigationChange(event.target.checked)} />
-          <span><strong>Irrigação disponível</strong><small>O motor considera essa informação ao avaliar o risco hídrico.</small></span>
+          <span><strong>Irrigation available</strong><small>The engine uses this when assessing water risk.</small></span>
         </label>
       </div>
     </fieldset>
