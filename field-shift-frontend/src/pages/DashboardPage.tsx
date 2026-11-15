@@ -49,7 +49,7 @@ export default function DashboardPage({ farm, onBack }: { farm: Farm; onBack: ()
         if (climateResult.status === "fulfilled") setClimate(climateResult.value);
         if (rotationResult.status === "fulfilled") setRotation(rotationResult.value);
         const failed = [climateResult, rotationResult].filter((result) => result.status === "rejected");
-        if (failed.length) setError("Não foi possível carregar todos os dados. Você ainda pode explorar o resultado disponível.");
+        if (failed.length) setError("Some data could not be loaded. You can still explore the available results.");
       })
       .finally(() => active && setLoading(false));
     return () => { active = false; };
@@ -58,11 +58,11 @@ export default function DashboardPage({ farm, onBack }: { farm: Farm; onBack: ()
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <button className="back-button" onClick={onBack}>← Nova propriedade</button>
+        <button className="back-button" onClick={onBack}>← New farm</button>
         <div>
-          <p className="eyebrow">Diagnóstico da safra</p>
+          <p className="eyebrow">Season diagnosis</p>
           <h2>{farm.name}</h2>
-          <p className="muted">Compare cenários de rotação e encontre um ponto de partida para a conversa técnica.</p>
+          <p className="muted">Compare rotation scenarios and find a starting point for the technical discussion.</p>
         </div>
       </header>
       {error && <p className="error">{error}</p>}
@@ -74,12 +74,12 @@ export default function DashboardPage({ farm, onBack }: { farm: Farm; onBack: ()
       {climate && <ClimateHistoryChart climate={climate} />}
       <PrioritySelector value={priorities} onChange={setPriorities} />
       <button className="primary-action" onClick={() => updateRotation(priorities)} disabled={!prioritiesAreValid || loading}>
-        {loading ? "Atualizando análise..." : "Atualizar recomendações"}
+        {loading ? "Updating analysis..." : "Update recommendations"}
       </button>
 
       {rotation && <RotationComparison recommendations={rotation.recommendations} />}
       <section className="recommendations-section">
-        <div className="section-heading"><div><p className="eyebrow">Resultado</p><h3>Estratégias recomendadas</h3></div></div>
+        <div className="section-heading"><div><p className="eyebrow">Results</p><h3>Recommended strategies</h3></div></div>
         <div className="recommendations-grid">
           {rotation?.recommendations.map((recommendation, index) => (
             <RecommendationCard key={recommendation.strategy} recommendation={recommendation} rank={index + 1} />
