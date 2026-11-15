@@ -6,12 +6,12 @@ interface Props {
 export function CropHistoryForm({ value, onChange }: Props) {
   return (
     <fieldset className="form-section">
-      <legend>Histórico de culturas</legend>
+      <legend>Crop history</legend>
       <label>
-        Culturas anteriores
-        <input value={value} onChange={(event) => onChange(event.target.value)} placeholder="Ex.: soja, milho" />
+        Previous crops
+        <input value={value} onChange={(event) => onChange(event.target.value)} placeholder="e.g. soybean, corn" />
       </label>
-      <p className="field-help">Separe as culturas por vírgula. O último item é tratado como a cultura mais recente.</p>
+      <p className="field-help">Separate crops with commas. The last item is treated as the most recent crop.</p>
     </fieldset>
   );
 }
