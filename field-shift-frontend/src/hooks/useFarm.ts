@@ -3,7 +3,7 @@ import { api } from "../services/api";
 import type { Farm, FarmCreate } from "../types/api";
 
 const INITIAL_FORM: FarmCreate = {
-  name: "Fazenda Demo",
+  name: "Demo Farm",
   latitude: -29.717,
   longitude: -52.425,
   area_hectares: 120,
