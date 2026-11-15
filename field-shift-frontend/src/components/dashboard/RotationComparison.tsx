@@ -3,8 +3,8 @@ import type { Recommendation } from "../../types/api";
 export function RotationComparison({ recommendations }: { recommendations: Recommendation[] }) {
   return (
     <section className="card comparison-card">
-      <p className="eyebrow">Comparativo</p>
-      <h3>Ranking das estratégias</h3>
+      <p className="eyebrow">Comparison</p>
+      <h3>Strategy ranking</h3>
       <div className="comparison-list">
         {recommendations.map((recommendation, index) => (
           <div className="comparison-row" key={recommendation.strategy}>
