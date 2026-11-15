@@ -105,8 +105,8 @@ def test_priority_changes_ranking():
         "/api/v1/rotation/analyze",
         json={"farm_id": farm_id, "priorities": {"soil_health": 10, "water_efficiency": 10, "climate_resilience": 10, "diversification": 70}},
     ).json()
-    assert soil_first["recommendations"][0]["strategy"] == "Cobertura de inverno"
-    assert diversity_first["recommendations"][0]["strategy"] == "Diversificação com feijão"
+    assert soil_first["recommendations"][0]["strategy"] == "Winter cover"
+    assert diversity_first["recommendations"][0]["strategy"] == "Bean diversification"
 
 
 def test_priorities_must_sum_100():
