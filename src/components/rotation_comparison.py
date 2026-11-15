@@ -1,23 +1,29 @@
 import pandas as pd
 import streamlit as st
 
-from src.models.dashboard import Strategy
+from src.models.dashboard import RotationStrategy
+
+CRITERIA_LABELS = {
+    "soil_health": "Soil health",
+    "water_efficiency": "Water efficiency",
+    "climate_resilience": "Climate resilience",
+    "diversification": "Diversification",
+}
 
 
-def render_rotation_comparison(strategies: list[Strategy]) -> None:
-    st.subheader("Comparador de rotações")
-    st.caption("Compare os resultados estimados das estratégias.")
+def render_rotation_comparison(strategies: list[RotationStrategy]) -> None:
+    st.subheader("Rotation comparison")
+    st.caption("Scores from 0 to 100 per criterion; the final score weights the criteria by the selected priorities.")
 
     comparison = pd.DataFrame(
         [
             {
-                "Estratégia": strategy.name,
-                "Pontuação": f"{strategy.score:.0f}/100",
-                "Produtividade estimada (t/ha)": strategy.estimated_yield,
-                "Uso de água estimado (mm)": strategy.water_use,
-                "Saúde do solo": strategy.soil_health,
+                "Strategy": strategy.name,
+                "Score": f"{strategy.score:.0f}/100",
+                "Rotation": strategy.rotation,
+                **{label: strategy.criteria.get(key) for key, label in CRITERIA_LABELS.items() if strategy.criteria},
             }
             for strategy in strategies
         ]
     )
-    st.dataframe(comparison, hide_index=True, use_container_width=True)
+    st.dataframe(comparison, hide_index=True, width="stretch")

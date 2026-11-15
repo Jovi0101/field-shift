@@ -9,7 +9,7 @@ de ponta a ponta, não entregar uma plataforma agrícola completa.
 | --- | --- | --- |
 | Cadastro | Nome, área, coordenadas, solo, irrigação e histórico de culturas | Pronto |
 | Localização | Coordenadas validadas e link para conferir o ponto no OpenStreetMap | Pronto para MVP |
-| Clima | Consulta mensal da NASA POWER (2020–2024), normalização, cache e fallback demonstrativo | Pronto |
+| Clima | Consulta mensal da NASA POWER (últimos 5 anos completos), normalização, cache e fallback demonstrativo | Pronto |
 | Catálogo | Cinco culturas com família, época, demanda hídrica e faixa de temperatura | Pronto para MVP |
 | Motor de rotação | Três cenários; pesos de prioridade, ajustes por solo/irrigação/histórico e explicação da nota | Pronto para MVP |
 | Dashboard | Resumo climático, histórico visual, perfil da propriedade, pesos e comparação de cenários | Pronto |

@@ -4,16 +4,16 @@ import streamlit as st
 from plotly.subplots import make_subplots
 
 
-def render_historical_charts(data: pd.DataFrame) -> None:
-    st.subheader("Histórico climático")
-    st.caption("Série demonstrativa. Substitua por dados validados da propriedade.")
+def render_historical_charts(data: pd.DataFrame, caption: str) -> None:
+    st.subheader("Climate history")
+    st.caption(caption)
 
     figure = make_subplots(specs=[[{"secondary_y": True}]])
     figure.add_trace(
         go.Scatter(
-            x=data["Mês"],
-            y=data["Temperatura (°C)"],
-            name="Temperatura",
+            x=data["Month"],
+            y=data["Temperature (°C)"],
+            name="Temperature",
             mode="lines+markers",
             line={"color": "#d97706", "width": 3},
         ),
@@ -21,9 +21,9 @@ def render_historical_charts(data: pd.DataFrame) -> None:
     )
     figure.add_trace(
         go.Bar(
-            x=data["Mês"],
-            y=data["Precipitação (mm)"],
-            name="Precipitação",
+            x=data["Month"],
+            y=data["Precipitation (mm)"],
+            name="Precipitation",
             marker_color="#3b82f6",
             opacity=0.55,
         ),
@@ -36,6 +36,6 @@ def render_historical_charts(data: pd.DataFrame) -> None:
         legend={"orientation": "h", "y": 1.12, "x": 0},
         hovermode="x unified",
     )
-    figure.update_yaxes(title_text="Temperatura (°C)", secondary_y=False)
-    figure.update_yaxes(title_text="Precipitação (mm)", secondary_y=True)
-    st.plotly_chart(figure, use_container_width=True)
+    figure.update_yaxes(title_text="Temperature (°C)", secondary_y=False)
+    figure.update_yaxes(title_text="Precipitation (mm)", secondary_y=True)
+    st.plotly_chart(figure, width="stretch")

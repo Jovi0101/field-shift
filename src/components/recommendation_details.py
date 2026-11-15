@@ -1,17 +1,23 @@
 import streamlit as st
 
-from src.models.dashboard import Strategy
+from src.models.dashboard import RotationStrategy
 
 
-def render_recommendation_details(strategy: Strategy) -> None:
-    st.subheader("Recomendação e riscos")
-    st.markdown(f"### Estratégia recomendada: {strategy.name}")
-    st.write(strategy.justification)
+def render_recommendation_details(strategy: RotationStrategy, caption: str) -> None:
+    st.subheader("Recommendation and risks")
+    st.markdown(f"### Recommended strategy: {strategy.name}")
+    st.caption(f"Rotation: {strategy.rotation}")
 
-    with st.expander("Ver riscos e pontos de atenção"):
+    for line in strategy.rationale:
+        st.markdown(f"- {line}")
+
+    if strategy.benefits:
+        with st.expander("Benefits"):
+            for benefit in strategy.benefits:
+                st.markdown(f"- {benefit}")
+
+    with st.expander("Risks and watch points"):
         for risk in strategy.risks:
             st.markdown(f"- {risk}")
 
-    st.caption(
-        "Esta recomendação usa dados fictícios e não deve orientar decisões de plantio."
-    )
+    st.caption(caption)

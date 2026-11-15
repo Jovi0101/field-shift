@@ -1,10 +1,10 @@
 import streamlit as st
 
-from src.models.dashboard import Strategy
+from src.models.dashboard import RotationStrategy
 
 
-def render_strategy_ranking(strategies: list[Strategy]) -> None:
-    st.subheader("Ranking de estratégias")
+def render_strategy_ranking(strategies: list[RotationStrategy]) -> None:
+    st.subheader("Strategy ranking")
     ranked = sorted(strategies, key=lambda item: item.score, reverse=True)
 
     for position, strategy in enumerate(ranked, start=1):
@@ -12,6 +12,6 @@ def render_strategy_ranking(strategies: list[Strategy]) -> None:
             first, second = st.columns([4, 1])
             with first:
                 st.markdown(f"**{position}. {strategy.name}**")
-                st.caption(f"Rotação: {strategy.rotation}")
+                st.caption(f"Rotation: {strategy.rotation}")
             with second:
-                st.metric("Pontuação", f"{strategy.score:.0f}/100")
+                st.metric("Score", f"{strategy.score:.0f}/100")

@@ -38,6 +38,8 @@ button:disabled { cursor: default; opacity: .58; }
 .field-help { color: #6a7a72; font-size: .8rem; line-height: 1.45; margin: -2px 0 12px; }
 .map-link { display: inline-block; margin-top: 4px; color: #246541; font-size: .84rem; font-weight: 720; text-decoration: none; }
 .map-link:hover { text-decoration: underline; }
+.location-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 12px; }
+.location-error { color: #9b281d; }
 .checkbox-label { display: flex; align-items: center; gap: 9px; padding: 11px; border-radius: 9px; background: #f4f8f1; }
 .checkbox-label input { flex: 0 0 auto; width: auto; margin: 0; }
 .checkbox-label span { display: grid; gap: 3px; }

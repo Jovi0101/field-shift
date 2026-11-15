@@ -1,20 +1,34 @@
 import type { FormEvent } from "react";
-import type { FarmCreate, SoilType } from "../../types/api";
+import type { FarmDraft, LocationStatus } from "../../hooks/useFarm";
+import type { SoilType } from "../../types/api";
 import { CropHistoryForm } from "./CropHistoryForm";
 import { FarmLocationMap } from "./FarmLocationMap";
 import { SoilForm } from "./SoilForm";
 
 interface Props {
-  form: FarmCreate;
+  form: FarmDraft;
   cropsText: string;
   loading: boolean;
   error: string | null;
-  onFieldChange: <K extends keyof FarmCreate>(key: K, value: FarmCreate[K]) => void;
+  locationStatus: LocationStatus;
+  onFieldChange: <K extends keyof FarmDraft>(key: K, value: FarmDraft[K]) => void;
   onCropsChange: (value: string) => void;
+  onUseCurrentLocation: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export function FarmForm({ form, cropsText, loading, error, onFieldChange, onCropsChange, onSubmit }: Props) {
+export function FarmForm({
+  form,
+  cropsText,
+  loading,
+  error,
+  locationStatus,
+  onFieldChange,
+  onCropsChange,
+  onUseCurrentLocation,
+  onSubmit,
+}: Props) {
+  const missingLocation = form.latitude === null || form.longitude === null;
   return (
     <form className="farm-form card" onSubmit={onSubmit}>
       <p className="eyebrow">Step 1 of 2</p>
@@ -38,8 +52,10 @@ export function FarmForm({ form, cropsText, loading, error, onFieldChange, onCro
       <FarmLocationMap
         latitude={form.latitude}
         longitude={form.longitude}
+        status={locationStatus}
         onLatitudeChange={(value) => onFieldChange("latitude", value)}
         onLongitudeChange={(value) => onFieldChange("longitude", value)}
+        onUseCurrentLocation={onUseCurrentLocation}
       />
       <SoilForm
         soilType={form.soil_type}
@@ -49,7 +65,7 @@ export function FarmForm({ form, cropsText, loading, error, onFieldChange, onCro
       />
       <CropHistoryForm value={cropsText} onChange={onCropsChange} />
       {error && <p className="error">{error}</p>}
-      <button className="primary-action" type="submit" disabled={loading}>{loading ? "Preparing analysis..." : "See farm analysis"}</button>
+      <button className="primary-action" type="submit" disabled={loading || missingLocation}>{loading ? "Preparing analysis..." : "See farm analysis"}</button>
     </form>
   );
 }

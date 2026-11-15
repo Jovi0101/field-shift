@@ -26,6 +26,10 @@ NASA_SAMPLE = {
 def offline_nasa(monkeypatch):
     """Os testes nunca chamam a NASA de verdade: usam o recorte acima."""
     monkeypatch.setattr(climate_service.settings, "use_mock_climate", False)
+    # O recorte acima é de 2020: fixa o período para não depender da data em que o teste roda.
+    monkeypatch.setattr(climate_service, "_climate_period", lambda: (2016, 2020))
+    # O recorte tem só 2 meses válidos; a regra dos 12 meses é testada em test_climate_period.py.
+    monkeypatch.setattr(climate_service, "REQUIRED_END_YEAR_MONTHS", 1)
     monkeypatch.setattr(climate_service, "fetch_monthly_point", lambda *args: NASA_SAMPLE)
     climate_service._get_real_climate.cache_clear()
 

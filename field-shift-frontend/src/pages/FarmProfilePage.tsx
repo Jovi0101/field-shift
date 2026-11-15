@@ -10,8 +10,10 @@ export default function FarmProfilePage({ onCreated }: { onCreated: (farm: Farm)
       cropsText={farm.cropsText}
       loading={farm.loading}
       error={farm.error}
+      locationStatus={farm.locationStatus}
       onFieldChange={farm.setField}
       onCropsChange={farm.setCropsText}
+      onUseCurrentLocation={farm.locateCurrentPosition}
       onSubmit={farm.submit}
     />
   );
