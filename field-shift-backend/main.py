@@ -7,7 +7,7 @@ from app.core.config import settings
 app = FastAPI(
     title="Field Shift API",
     version="0.1.0",
-    description="Recomendações de rotação de culturas com dados ambientais da NASA.",
+    description="Crop rotation recommendations using NASA environmental data.",
 )
 
 app.add_middleware(
