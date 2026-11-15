@@ -1,18 +1,26 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from config import settings
 
-app = FastAPI(title=settings.PROJECT_NAME)
+from app.api.v1.router import api_router
+from app.core.config import settings
 
-# Configurar CORS para permitir que o Frontend converse com o Backend
+app = FastAPI(
+    title="Field Shift API",
+    version="0.1.0",
+    description="Recomendações de rotação de culturas com dados ambientais da NASA.",
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read_root():
-    return {"message": "Field Shift API está rodando com sucesso! 🚀"}
+app.include_router(api_router, prefix="/api/v1")
+
+
+@app.get("/health", tags=["health"])
+def health() -> dict[str, str]:
+    return {"status": "ok"}
