@@ -12,10 +12,10 @@ from app.schemas.rotation import Priorities, Recommendation, RotationAnalyzeResp
 
 
 CRITERIA_LABELS = {
-    "soil_health": "Saúde do solo",
-    "water_efficiency": "Eficiência hídrica",
-    "climate_resilience": "Resiliência climática",
-    "diversification": "Diversificação",
+    "soil_health": "Soil health",
+    "water_efficiency": "Water efficiency",
+    "climate_resilience": "Climate resilience",
+    "diversification": "Diversification",
 }
 
 
@@ -30,25 +30,25 @@ class Strategy:
 
 STRATEGIES = (
     Strategy(
-        name="Cobertura de inverno",
+        name="Winter cover",
         crops=["soybean", "oats", "corn"],
         criteria={"soil_health": 91, "water_efficiency": 70, "climate_resilience": 84, "diversification": 86},
-        benefits=["Mantém o solo coberto no inverno", "Alterna famílias Fabaceae e Poaceae"],
-        risks=["Milho exige acompanhamento da disponibilidade de água"],
+        benefits=["Keeps the soil covered during winter", "Alternates Fabaceae and Poaceae families"],
+        risks=["Corn requires close monitoring of water availability"],
     ),
     Strategy(
-        name="Renda com trigo",
+        name="Wheat income",
         crops=["soybean", "wheat", "soybean"],
         criteria={"soil_health": 72, "water_efficiency": 78, "climate_resilience": 73, "diversification": 56},
-        benefits=["Cria uma opção de renda no inverno", "Tem menor demanda hídrica que o milho"],
-        risks=["Repete soja no ciclo e reduz a diversidade de famílias"],
+        benefits=["Creates a winter income option", "Lower water demand than corn"],
+        risks=["Repeats soybean in the cycle and reduces family diversity"],
     ),
     Strategy(
-        name="Diversificação com feijão",
+        name="Bean diversification",
         crops=["corn", "oats", "bean"],
         criteria={"soil_health": 82, "water_efficiency": 68, "climate_resilience": 78, "diversification": 100},
-        benefits=["Amplia a diversidade de culturas", "Inclui leguminosa com fixação biológica de nitrogênio"],
-        risks=["Exige planejamento comercial e operacional para o feijão"],
+        benefits=["Broadens crop diversity", "Includes a legume with biological nitrogen fixation"],
+        risks=["Requires commercial and operational planning for beans"],
     ),
 )
 
@@ -86,13 +86,13 @@ def _adjusted_criteria(strategy: Strategy, farm: FarmRead) -> dict[str, int]:
 def _rationale(farm: FarmRead, priorities: Priorities, strategy: Strategy) -> list[str]:
     highest_priority = max(CRITERIA_LABELS, key=lambda key: getattr(priorities, key))
     details = [
-        f"A prioridade mais relevante foi {CRITERIA_LABELS[highest_priority].lower()} ({getattr(priorities, highest_priority)}%).",
-        f"O solo informado é {farm.soil_type.value} e a irrigação está {'disponível' if farm.irrigation else 'indisponível'}.",
+        f"The top priority was {CRITERIA_LABELS[highest_priority].lower()} ({getattr(priorities, highest_priority)}%).",
+        f"The reported soil is {farm.soil_type.value} and irrigation is {'available' if farm.irrigation else 'unavailable'}.",
     ]
     if farm.previous_crops:
-        details.append(f"O histórico considerado termina em {farm.previous_crops[-1]}.")
+        details.append(f"The crop history considered ends with {farm.previous_crops[-1]}.")
     if "oats" in strategy.crops:
-        details.append("A aveia foi incluída como cultura de inverno para cobertura do solo.")
+        details.append("Oats were included as a winter cover crop.")
     return details
 
 
@@ -101,9 +101,9 @@ def _recommendation(strategy: Strategy, farm: FarmRead, priorities: Priorities) 
     weighted_score = sum(criteria[key] * getattr(priorities, key) for key in CRITERIA_LABELS) / 100
     risks = list(strategy.risks)
     if farm.soil_type == "sandy":
-        risks.append("Solo arenoso pede atenção extra à retenção de água e matéria orgânica")
+        risks.append("Sandy soil needs extra attention to water retention and organic matter")
     if not farm.irrigation and "corn" in strategy.crops:
-        risks.append("Sem irrigação, validar a janela de chuva antes do plantio do milho")
+        risks.append("Without irrigation, confirm the rainfall window before planting corn")
 
     return Recommendation(
         strategy=strategy.name,
