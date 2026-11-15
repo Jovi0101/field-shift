@@ -1,18 +1,20 @@
-services:
+﻿services:
   db:
-    image: postgres:16
+    image: postgres:16-alpine
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: fieldshift
-      POSTGRES_PASSWORD: fieldshift
-      POSTGRES_DB: fieldshift
+      POSTGRES_DB: ${POSTGRES_DB:-field_shift}
+      POSTGRES_USER: ${POSTGRES_USER:-field_shift}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-field_shift_dev}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U fieldshift"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-field_shift} -d ${POSTGRES_DB:-field_shift}"]
       interval: 5s
+      timeout: 5s
       retries: 10
 
 volumes:
-  pgdata:
+  postgres_data:
