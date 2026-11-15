@@ -62,6 +62,7 @@ export function FarmLocationMap({
             value={latitude ?? ""}
             placeholder={status.state === "locating" ? "Locating..." : ""}
             onChange={(event) => onLatitudeChange(parseCoordinate(event.target.value))}
+            readOnly
             required
           />
         </label>
@@ -75,6 +76,7 @@ export function FarmLocationMap({
             value={longitude ?? ""}
             placeholder={status.state === "locating" ? "Locating..." : ""}
             onChange={(event) => onLongitudeChange(parseCoordinate(event.target.value))}
+            readOnly
             required
           />
         </label>
