@@ -14,8 +14,8 @@ export function FarmLocationMap({ latitude, longitude, onLatitudeChange, onLongi
 
   return (
     <fieldset className="form-section">
-      <legend>Localização da propriedade</legend>
-      <p className="field-help">Informe as coordenadas ou confira o ponto no mapa antes de analisar.</p>
+      <legend>Farm location</legend>
+      <p className="field-help">Enter the coordinates or check the point on the map before analyzing.</p>
       <div className="form-grid">
         <label>
           Latitude
@@ -26,7 +26,7 @@ export function FarmLocationMap({ latitude, longitude, onLatitudeChange, onLongi
           <input type="number" step="any" min="-180" max="180" value={longitude} onChange={(event) => onLongitudeChange(Number(event.target.value))} required />
         </label>
       </div>
-      <a className="map-link" href={mapUrl} target="_blank" rel="noreferrer">Conferir ponto no mapa ↗</a>
+      <a className="map-link" href={mapUrl} target="_blank" rel="noreferrer">Check point on map ↗</a>
     </fieldset>
   );
 }
