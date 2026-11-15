@@ -1,10 +1,10 @@
 import type { Priorities } from "../../types/api";
 
 const FIELDS: Array<{ key: keyof Priorities; label: string; hint: string }> = [
-  { key: "soil_health", label: "Saúde do solo", hint: "cobertura e qualidade do solo" },
-  { key: "water_efficiency", label: "Eficiência hídrica", hint: "uso e disponibilidade de água" },
-  { key: "climate_resilience", label: "Resiliência climática", hint: "adaptação a variações do clima" },
-  { key: "diversification", label: "Diversificação", hint: "alternância de culturas e famílias" },
+  { key: "soil_health", label: "Soil health", hint: "soil cover and quality" },
+  { key: "water_efficiency", label: "Water efficiency", hint: "water use and availability" },
+  { key: "climate_resilience", label: "Climate resilience", hint: "adapting to climate variability" },
+  { key: "diversification", label: "Diversification", hint: "alternating crops and families" },
 ];
 
 interface Props {
@@ -19,12 +19,12 @@ export function PrioritySelector({ value, onChange }: Props) {
     <section className="card priorities-card">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">Sua estratégia</p>
-          <h3>O que é mais importante agora?</h3>
+          <p className="eyebrow">Your strategy</p>
+          <h3>What matters most right now?</h3>
         </div>
         <strong className={total === 100 ? "total-valid" : "total-invalid"}>{total}% / 100%</strong>
       </div>
-      <p className="muted">Ajuste os pesos para comparar as recomendações com o objetivo da safra.</p>
+      <p className="muted">Adjust the weights to compare recommendations against your season goal.</p>
       <div className="priority-grid">
         {FIELDS.map(({ key, label, hint }) => (
           <label className="priority-control" key={key}>
@@ -40,7 +40,7 @@ export function PrioritySelector({ value, onChange }: Props) {
           </label>
         ))}
       </div>
-      {total !== 100 && <p className="validation-message">Os quatro pesos precisam somar 100% para atualizar a análise.</p>}
+      {total !== 100 && <p className="validation-message">The four weights must add up to 100% to update the analysis.</p>}
     </section>
   );
 }
