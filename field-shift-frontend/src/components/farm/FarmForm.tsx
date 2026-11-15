@@ -17,19 +17,19 @@ interface Props {
 export function FarmForm({ form, cropsText, loading, error, onFieldChange, onCropsChange, onSubmit }: Props) {
   return (
     <form className="farm-form card" onSubmit={onSubmit}>
-      <p className="eyebrow">Etapa 1 de 2</p>
-      <h2>Conheça a propriedade</h2>
-      <p className="muted">Em poucos campos, o Field Shift prepara cenários iniciais de rotação para a conversa de safra.</p>
+      <p className="eyebrow">Step 1 of 2</p>
+      <h2>Tell us about the farm</h2>
+      <p className="muted">With just a few fields, Field Shift prepares initial rotation scenarios for your season planning.</p>
 
       <fieldset className="form-section">
-        <legend>Informações gerais</legend>
+        <legend>General information</legend>
         <div className="form-grid">
           <label>
-            Nome da propriedade
+            Farm name
             <input value={form.name} onChange={(event) => onFieldChange("name", event.target.value)} required />
           </label>
           <label>
-            Área (ha)
+            Area (ha)
             <input type="number" min="0.1" step="any" value={form.area_hectares} onChange={(event) => onFieldChange("area_hectares", Number(event.target.value))} required />
           </label>
         </div>
@@ -49,7 +49,7 @@ export function FarmForm({ form, cropsText, loading, error, onFieldChange, onCro
       />
       <CropHistoryForm value={cropsText} onChange={onCropsChange} />
       {error && <p className="error">{error}</p>}
-      <button className="primary-action" type="submit" disabled={loading}>{loading ? "Preparando análise..." : "Ver análise da propriedade"}</button>
+      <button className="primary-action" type="submit" disabled={loading}>{loading ? "Preparing analysis..." : "See farm analysis"}</button>
     </form>
   );
 }
