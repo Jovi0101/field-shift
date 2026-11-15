@@ -10,7 +10,7 @@ from app.schemas.crop import CropRead
 @dataclass(frozen=True)
 class Crop:
     id: str
-    name_pt: str
+    name: str
     family: str  # famílias diferentes em sequência = melhor quebra de ciclo de pragas
     season: str  # "summer" | "winter"
     nitrogen_fixing: bool
@@ -22,11 +22,11 @@ class Crop:
 CROPS: dict[str, Crop] = {
     c.id: c
     for c in [
-        Crop("soybean", "Soja", "Fabaceae", "summer", True, "medium", 20, 30),
-        Crop("corn", "Milho", "Poaceae", "summer", False, "high", 18, 32),
-        Crop("wheat", "Trigo", "Poaceae", "winter", False, "medium", 10, 24),
-        Crop("oats", "Aveia", "Poaceae", "winter", False, "low", 8, 22),
-        Crop("bean", "Feijão", "Fabaceae", "summer", True, "medium", 18, 28),
+        Crop("soybean", "Soybean", "Fabaceae", "summer", True, "medium", 20, 30),
+        Crop("corn", "Corn", "Poaceae", "summer", False, "high", 18, 32),
+        Crop("wheat", "Wheat", "Poaceae", "winter", False, "medium", 10, 24),
+        Crop("oats", "Oats", "Poaceae", "winter", False, "low", 8, 22),
+        Crop("bean", "Bean", "Fabaceae", "summer", True, "medium", 18, 28),
     ]
 }
 
@@ -36,7 +36,7 @@ def list_crops() -> list[CropRead]:
     return [
         CropRead(
             id=crop.id,
-            name=crop.name_pt,
+            name=crop.name,
             family=crop.family,
             season=crop.season,
             nitrogen_fixing=crop.nitrogen_fixing,
